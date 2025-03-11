@@ -1,0 +1,5 @@
+debug: true
+secret_key: 'JeFvgCrMuvkoAJjkHgyaMDxku'
+
+pgx:
+  dsn: postgres://user:pass@localhost:5432/dgii-api?sslmode=disable

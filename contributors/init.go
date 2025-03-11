@@ -1,30 +1,26 @@
 package contributors
 
 import (
-	"my-dgii-api/database"
+	"context"
 
-	"github.com/uptrace/bun"
-	"github.com/uptrace/bunrouter"
+	"my-dgii-api/bunapp"
 )
 
-func InitRoutes(db *bun.DB) *bunrouter.Router {
-    router := bunrouter.New()
-    handler := NewContributorHandler(db)
+func init() {
+	bunapp.OnStart("contributor.initRoutes", func(ctx context.Context, app *bunapp.App) error {
+		app.DB().RegisterModel((*Contributor)(nil))
 
-    // Rutas para Contribuyentes
-    router.GET("/contributors", handler.GetContributors)
-    router.GET("/contributors/:rnc", handler.GetByRnc)
-    router.POST("/contributors", handler.CreateContributor)
-    router.PUT("/contributors/:id", handler.UpdateContributor)
-    router.DELETE("/contributors/:id", handler.DeleteContributor)
-    router.POST("/contributors/import", handler.ImportContributors)
+		contributorHandler := NewContributorHandler(app)
 
-    return router
-}
+		g := app.APIRouter().NewGroup("/v1")
 
-func InitModule() *bunrouter.Router {
-    db := database.ConnectDB()
-	
-    router := InitRoutes(db)
-    return router
+
+        g.GET("/contributors", contributorHandler.GetContributors)
+        g.GET("/contributors/:rnc", contributorHandler.GetByRnc)
+        g.POST("/contributors", contributorHandler.CreateContributor)
+
+		g.POST("/contributors/import", contributorHandler.ImportContributors)
+
+		return nil
+	})
 }

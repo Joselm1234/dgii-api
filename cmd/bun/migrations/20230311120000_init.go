@@ -1,4 +1,4 @@
-package cmd
+package migrations
 
 import (
 	"context"
@@ -6,13 +6,12 @@ import (
 	"my-dgii-api/contributors"
 
 	"github.com/uptrace/bun"
-	"github.com/uptrace/bun/migrate"
 )
 
-var Migrations = migrate.NewMigrations()
 
 func init() {
     Migrations.MustRegister(func(ctx context.Context, db *bun.DB) error {
+        
         // Crear la tabla contributors
         _, err := db.NewCreateTable().Model((*contributors.Contributor)(nil)).IfNotExists().Exec(ctx)
         if err != nil {

@@ -6,6 +6,8 @@ import (
 	"log"
 	"time"
 
+	"my-dgii-api/bunapp"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -56,9 +58,9 @@ func (c *Contributor) Save(ctx context.Context, db bun.IDB) error {
     return nil
 }
 
-func SelectContributorByRNC(ctx context.Context, db bun.IDB, rnc string) (*Contributor, error) {
+func SelectContributorByRNC(ctx context.Context, app *bunapp.App, rnc string) (*Contributor, error) {
     contributor := new(Contributor)
-    err := db.NewSelect().
+    err := app.DB().NewSelect().
         Model(contributor).
         Where("rnc = ?", rnc).
         Scan(ctx)

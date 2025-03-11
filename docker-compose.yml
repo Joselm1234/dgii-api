@@ -1,15 +1,13 @@
-version: "3.8"
 services:
-  db:
-    image: postgres:14
+  postgres:
+    image: postgres:15
+    container_name: dgii-postgres
+    restart: always
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: dgii_db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=dgii-api
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-
-volumes:
-  postgres_data:
+      - 5432:5432
+    healthcheck:
+      test: nc -z localhost 5432
